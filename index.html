@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Para mi hermana favorita ✨</title>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        body { margin: 0; background: #000; color: white; font-family: 'Quicksand', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; text-align: center; }
+        
+        /* Fondo Ciudad Atardecer */
+        #ciudad-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, #2c3e50, #fd746c, #ff9068); z-index: -1; opacity: 0; transition: 3s; }
+        .edificio { position: absolute; bottom: 0; background: rgba(0,0,0,0.4); width: 10%; }
+
+        .btn-inicio { padding: 25px 50px; font-size: 2rem; background: #ff4d79; border: none; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 0 30px #ff4d79; font-family: 'Dancing Script', cursive; z-index: 100; }
+        .btn-loco { padding: 15px 35px; background: #ff007f; border: 3px solid white; border-radius: 50px; color: white; cursor: pointer; position: absolute; z-index: 999; box-shadow: 0 0 25px #ff007f; font-weight: bold; font-size: 1.5rem; transition: 0.1s; }
+        
+        #contenedor { width: 90%; max-width: 750px; z-index: 10; display: none; }
+        .texto-nostalgico { font-family: 'Dancing Script', cursive; font-size: 2.3rem; color: #fff; line-height: 1.4; text-shadow: 2px 2px 20px rgba(0,0,0,0.8); }
+        .sobre { background: #fff; color: #ff4d79; padding: 40px; border-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.4); cursor: pointer; border: 3px dashed #ff4d79; font-family: 'Dancing Script', cursive; font-size: 2.5rem; transition: 0.5s; }
+        
+        #emoji-corriendo { font-size: 6rem; position: absolute; bottom: 10%; left: -200px; z-index: 5; transition: 2.5s linear; }
+    </style>
+</head>
+<body>
+
+    <div id="ciudad-bg"></div>
+    <div id="escena">
+        <button id="btnPlay" class="btn-inicio">Hola loka, yo soy muy pro checa esto... ✨</button>
+    </div>
+    <div id="contenedor"></div>
+    <div id="emoji-corriendo">🏃‍♂️💨</div>
+
+    <script>
+        const escena = document.getElementById('escena');
+        const ciudad = document.getElementById('ciudad-bg');
+        const cont = document.getElementById('contenedor');
+        const emoji = document.getElementById('emoji-corriendo');
+        let clics = 0;
+
+        // Generar siluetas de ciudad
+        for(let i=0; i<10; i++) {
+            let ed = document.createElement('div');
+            ed.className = 'edificio';
+            ed.style.height = (Math.random() * 40 + 10) + "%";
+            ed.style.left = (i * 10) + "%";
+            ciudad.appendChild(ed);
+        }
+
+        // Engine de Audio Profesional
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function sonar(freq, tipo, duracion, vol = 0.15) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = tipo; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duracion);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duracion);
+        }
+
+        function musicaPiano() {
+            const melodía = [523.25, 659.25, 783.99, 880.00];
+            melodía.forEach((n, i) => {
+                setTimeout(() => sonar(n, 'sine', 3, 0.05), i * 800);
+            });
+        }
+
+        function risas() {
+            for(let i=0; i<12; i++) setTimeout(() => sonar(150 + Math.random()*500, 'sawtooth', 0.2, 0.1), i*80);
+        }
+
+        // FASE 1: BROMAS
+        document.getElementById('btnPlay').addEventListener('click', function() {
+            this.remove();
+            const b = document.createElement('button');
+            b.className = 'btn-loco'; b.innerText = 'TOCA AQUÍ';
+            document.body.appendChild(b);
+            b.style.top = "50%"; b.style.left = "50%"; b.style.transform = "translate(-50%, -50%)";
+
+            b.addEventListener('click', () => {
+                clics++; sonar(400 + (clics * 50), 'sine', 0.2);
+                if (clics < 8) {
+                    b.style.top = (Math.random()*70 + 15) + "%";
+                    b.style.left = (Math.random()*70 + 15) + "%";
+                } else {
+                    b.remove();
+                    faseManca();
+                }
+            });
+        });
+
+        function faseManca() {
+            document.body.style.background = "#ffff00";
+            risas();
+            escena.innerHTML = "<h1 style='font-size:5rem; color:black;'>¡MANCAAA! 😂🤡</h1>";
+            setTimeout(faseCarta, 3000);
+        }
+
+        function faseCarta() {
+            document.body.style.background = "#000";
+            escena.innerHTML = "<div class='sobre' onclick='abrirCarta()'>💌 Abrir carta de tu hermano...</div>";
+        }
+
+        // FASE 2: NOSTALGIA Y CIUDAD
+        function abrirCarta() {
+            escena.style.display = 'none';
+            ciudad.style.opacity = 1;
+            cont.style.display = 'block';
+            
+            // Inicia música de fondo
+            const loopMusica = setInterval(musicaPiano, 4000);
+            musicaPiano();
+
+            const texto = "manca pa to pero... ¿que fue dani? gracias x estos 15 años kike cuidadome 👀 pero siempre haz estado cuando te necesito y aconsejarme y dandome apoyo. Eres la mejor hermana de 24 años... gracias x prestarme la pc con la que hice esto jaja.";
+            
+            cont.innerHTML = `<div id='maquina' class='texto-nostalgico'></div>`;
+            let i = 0;
+            const t = setInterval(() => {
+                document.getElementById('maquina').innerHTML += texto.charAt(i);
+                i++;
+                if(i >= texto.length) {
+                    clearInterval(t);
+                    setTimeout(() => { clearInterval(loopMusica); faseArhanza(); }, 6000);
+                }
+            }, 75);
+        }
+
+        // FASE 3: ARHANZA Y FINAL PC
+        function faseArhanza() {
+            ciudad.style.opacity = 0;
+            document.body.style.background = "#000";
+            cont.innerHTML = "<h1 class='texto-nostalgico'>¿Sera que esto le guste a Arhanza? 😍</h1>";
+            setTimeout(() => {
+                emoji.style.left = "120vw";
+                setTimeout(() => {
+                    sonar(80, 'square', 0.6);
+                    cont.innerHTML += "<h2 style='color:orange'>¡PUM! *Se cae de cara* 🤡💨</h2>";
+                    risas();
+                    setTimeout(finalPC, 4000);
+                }, 1300);
+            }, 1000);
+        }
+
+        function finalPC() {
+            document.body.style.background = "linear-gradient(to right, #4facfe, #00f2fe)";
+            cont.innerHTML = "<h1 class='texto-nostalgico' style='font-size:3rem'>Ah gracias x la pc que sin ella no hubiera hecho esto byeee! 💻✌️</h1>";
+            sonar(880, 'sine', 1, 0.2);
+        }
+    </script>
+</body>
